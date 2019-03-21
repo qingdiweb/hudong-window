@@ -16,9 +16,16 @@ export default  class QuestionDetail extends  Component{
         this.state = {
             magnification:100,
             singleStep:10,
-            data:{},
+            data:null,
         };
-        this.questionFetch =  new QuestionFetch();
+
+        let magnification = localStorage.getItem("magnification");
+        console.log('magnification',magnification,parseInt(magnification));
+        if (!!magnification&&!!parseInt(magnification))
+        {
+            this.state.magnification = parseInt(magnification);
+        }
+         this.questionFetch =  new QuestionFetch();
       }
       componentWillMount() {
 
@@ -41,7 +48,6 @@ export default  class QuestionDetail extends  Component{
       }
       componentDidMount() {
 
-
       }
       render(){
 
@@ -63,9 +69,12 @@ export default  class QuestionDetail extends  Component{
       }
 
       showBigQuestion(){
+          if (!this.state.data)
+          {
+              return null;
+          }
           let scaleFont = (this.state.magnification-100)/10 *2;
           let img = 'img'+(this.state.magnification/10);
-
           return <div className='big-question'>
               <div className={'cont-title ' + img} style={{fontSize:15+scaleFont}}><span className="topic-type">({this.state.data.category})</span><span dangerouslySetInnerHTML={{ __html: this.state.data.title }}></span></div>
               <div  className='parent-option-cont'>
@@ -81,6 +90,10 @@ export default  class QuestionDetail extends  Component{
           </div>
       }
       showSubtopic(){
+          if (!this.state.data)
+          {
+              return null;
+          }
           let childQuestionId = this.props.childQuestionId;
           console.log('childQuestionId',childQuestionId);
           if (!!this.state.data.childQuestionInfoList&&this.state.data.childQuestionInfoList.length &&!!childQuestionId)
@@ -120,9 +133,11 @@ export default  class QuestionDetail extends  Component{
           console.log('enlargeClick');
           if (this.state.magnification <= 500-this.state.singleStep)
           {
+              let magnification = this.state.magnification+this.state.singleStep;
               this.setState({
-                  magnification:this.state.magnification+this.state.singleStep,
+                  magnification:magnification,
               });
+              localStorage.setItem("magnification",magnification+'');//放大率
           }
       }
 
@@ -130,9 +145,11 @@ export default  class QuestionDetail extends  Component{
         console.log('narrowClick');
         if (this.state.magnification >= 20+this.state.singleStep)
         {
+            let  magnification = this.state.magnification-this.state.singleStep;
             this.setState({
-                magnification:this.state.magnification-this.state.singleStep,
+                magnification:magnification,
             });
+            localStorage.setItem("magnification",magnification+'');//放大率
         }
       }
 
