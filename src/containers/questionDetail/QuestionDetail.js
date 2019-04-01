@@ -110,6 +110,10 @@ export default  class QuestionDetail extends  Component{
                       break;
                   }
               }
+              if (childQuestionIndex===-1)
+              {
+                  return;
+              }
               let scaleFont = (this.state.magnification-100)/10 *2;
               let img = 'img'+(this.state.magnification/10);
 
